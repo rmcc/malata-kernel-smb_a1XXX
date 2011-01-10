@@ -240,6 +240,19 @@ config SMB_WIFI_LED
 	tristate "Wifi LED control for SMB platforms"
 	depends on LEDS_SMB
 
+config LEDS_SMB
+	tristate "LED driver for SMB platform"
+	depends on LEDS_CLASS
+	help
+	  This options enable support for SMB platform LED.
+
+config SMBA1006_BATTERY_LED
+	tristate "Battery driver for SMBA1006"
+	depends on LEDS_SMB && 7379Y_V11
+	help
+	  This options enable support for LEDS on SMBA1006 (Board number:
+	  7379Y_V11)
+
 comment "LED Triggers"
 
 config LEDS_TRIGGERS

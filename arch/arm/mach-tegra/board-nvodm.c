@@ -1269,6 +1269,13 @@ static struct platform_device isl29023_ls_device = {
 	};
 #endif
 
+#ifdef CONFIG_SMBA1006_BATTERY_LED
+static struct platform_device smba1006_battery_led_platform_device = {
+	.name = "smba1006_battery_led",
+	.id = -1,
+};
+#endif
+
 #ifdef CONFIG_SMB_WIFI_LED
 static struct platform_device wifi_led_platform_device = {
 	.name = "WIFI_LED", 
@@ -1861,6 +1868,10 @@ void __init tegra_setup_nvodm(bool standard_i2c, bool standard_spi)
 	
 	#ifdef CONFIG_SWITCH_H2W//should be initilized after CONFIG_SWITCH_DOCK
 		(void) platform_device_register(&switch_h2w_device);
+	#endif
+
+	#ifdef CONFIG_SMBA1006_BATTERY_LED
+	(void) platform_device_register(&smba1006_battery_led_platform_device);
 	#endif
 	
 	#ifdef CONFIG_SMB_WIFI_LED
