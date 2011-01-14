@@ -1268,6 +1268,13 @@ static struct platform_device isl29023_ls_device = {
 		.id = -1,
 	};
 #endif
+
+#ifdef CONFIG_SMB_WIFI_LED
+static struct platform_device wifi_led_platform_device = {
+	.name = "WIFI_LED", 
+	.id = -1, 
+};
+#endif
 	
 static struct platform_device *nvodm_devices[] __initdata = {
 #ifdef CONFIG_RTC_DRV_TEGRA
@@ -1855,7 +1862,11 @@ void __init tegra_setup_nvodm(bool standard_i2c, bool standard_spi)
 	#ifdef CONFIG_SWITCH_H2W//should be initilized after CONFIG_SWITCH_DOCK
 		(void) platform_device_register(&switch_h2w_device);
 	#endif
-		
+	
+	#ifdef CONFIG_SMB_WIFI_LED
+	(void) platform_device_register(&wifi_led_platform_device);
+	#endif
+	
 	tegra_setup_suspend();
 	tegra_setup_reboot();
 }
