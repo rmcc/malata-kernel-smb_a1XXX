@@ -32,8 +32,11 @@
 #include <linux/platform_device.h>
 #include "nvodm_pmu.h"
 
-
+#ifdef CONFIG_RTC_DRV_TEGRA
 #define SYNC_EXTERNAL_RTC_TO_INTERNAL_RTC  (1)
+#else
+#define SYNC_EXTERNAL_RTC_TO_INTERNAL_RTC  (0)
+#endif
 
 /* Create a custom rtc structrue and move this to that structure */
 static NvOdmPmuDeviceHandle hPmu = NULL;
@@ -174,13 +177,17 @@ static int tegra_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *wkalrm)
 #else
         pr_info("%s():enter.\n", __func__);
 
+	if(!NvOdmPmuWriteAlarm(hPmu, alarm_sec-now))
+		return -EINVAL;
+#if 0
         /* Alarm set */
         events |= RTC_IRQF | RTC_AF;
 
         if (rtc)
                 rtc_update_irq(rtc, 1, events);
 
-        return NV_TRUE;
+#endif
+        return NV_TRUE; 
 #endif
 }
 
