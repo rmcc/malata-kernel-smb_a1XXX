@@ -7766,6 +7766,10 @@ wl_iw_check_conn_fail(wl_event_msg_t *e, char* stringBuf, uint buflen)
 #define IW_CUSTOM_MAX 256 
 #endif
 
+#ifdef CONFIG_SMB_WIFI_LED
+extern Nv_WIFI_LED_Control(unsigned int enable);
+#endif
+
 void
 wl_iw_event(struct net_device *dev, wl_event_msg_t *e, void* data)
 {
@@ -7839,6 +7843,9 @@ wl_iw_event(struct net_device *dev, wl_event_msg_t *e, void* data)
 	case WLC_E_JOIN:
 	case WLC_E_ASSOC_IND:
 	case WLC_E_REASSOC_IND:
+#ifdef CONFIG_SMB_WIFI_LED
+		Nv_WIFI_LED_Control(1);
+#endif
 #if defined(SOFTAP)
 		WL_SOFTAP(("STA connect received %d\n", event_type));
 		if (ap_cfg_running) {
@@ -7884,6 +7891,9 @@ wl_iw_event(struct net_device *dev, wl_event_msg_t *e, void* data)
 		break;
 	case WLC_E_DEAUTH_IND:
 	case WLC_E_DISASSOC_IND:
+#ifdef CONFIG_SMB_WIFI_LED
+		Nv_WIFI_LED_Control(0);
+#endif
 #if defined(SOFTAP)
 		WL_SOFTAP(("STA disconnect received %d\n", event_type));
 		if (ap_cfg_running) {

@@ -2595,6 +2595,10 @@ dhd_detach(dhd_pub_t *dhdp)
 	}
 }
 
+#ifdef CONFIG_SMB_WIFI_LED
+extern Nv_WIFI_LED_Control(unsigned int enable);
+#endif
+
 static void __exit
 dhd_module_cleanup(void)
 {
@@ -2603,6 +2607,10 @@ dhd_module_cleanup(void)
 	dhd_bus_unregister();
 #if defined(CUSTOMER_HW2) && defined(CONFIG_WIFI_CONTROL_FUNC)
 	wifi_del_dev();
+#endif
+#ifdef CONFIG_SMB_WIFI_LED
+	/* In case we're associated while disabling, turn off led */
+	Nv_WIFI_LED_Control(0);
 #endif
 	/* Call customer gpio to turn off power with WL_REG_ON signal */
 	dhd_customer_gpio_wlan_ctrl(WLAN_POWER_OFF);
