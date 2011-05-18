@@ -414,6 +414,10 @@ static void lis35de_update_work_func(struct work_struct *work)
 static int lis35de_probe(struct platform_device *pdev)
 {
 	struct lis35de_dev *dev;
+       NvU32 NumI2cConfigs;
+       const NvU32 *pI2cConfigs;
+       struct lis35de_platform_data *pdata;
+
 
 	{//disable interrupt gpio, set to input, or maybe damage g_sensor
 		int gpio_int=8*('j'-'a') + 0;
@@ -439,11 +443,23 @@ static int lis35de_probe(struct platform_device *pdev)
 	dev->i2c_instance = LIS35DE_I2C_INSTANCE;
 	dev->i2c_address = LIS35DE_I2C_ADDRESS;
 	dev->update_interval = LIS35DE_UPDATE_INTERVAL;
+#ifndef CONFIG_SMBA1011
 	dev->flag = FLIP_X | FLIP_Y;
-	dev->i2c = NvOdmI2cOpen(NvOdmIoModule_I2c, dev->i2c_instance);
+#endif
+
+	NvOdmQueryPinMux(NvOdmIoModule_I2c, &pI2cConfigs, &NumI2cConfigs);
+	if (dev->i2c_instance >= NumI2cConfigs) {
+		return -EINVAL;
+	}
+	if (pI2cConfigs[dev->i2c_instance] == NvOdmI2cPinMap_Multiplexed) {
+		dev->i2c = NvOdmI2cPinMuxOpen(NvOdmIoModule_I2c, dev->i2c_instance, NvOdmI2cPinMap_Config2);
+	} else {
+		dev->i2c = NvOdmI2cOpen(NvOdmIoModule_I2c, dev->i2c_instance);
+	}
 	if (!dev->i2c) {
 		goto failed_open_i2c;
 	}
+
 	
 	dev->input_dev = input_allocate_device();
 	if (dev->input_dev == NULL) {

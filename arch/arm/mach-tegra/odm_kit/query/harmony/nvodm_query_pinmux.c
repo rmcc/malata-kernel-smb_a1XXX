@@ -54,7 +54,11 @@ static const NvU32 s_NvOdmPinMuxConfig_Twc[] = {
 
 static const NvU32 s_NvOdmPinMuxConfig_I2c[] = {
     NvOdmI2cPinMap_Config1,
+#ifdef CONFIG_SMBA1011
+    NvOdmI2cPinMap_Multiplexed,
+#else
     NvOdmI2cPinMap_Config1,
+#endif
     NvOdmI2cPinMap_Config1
 };
 

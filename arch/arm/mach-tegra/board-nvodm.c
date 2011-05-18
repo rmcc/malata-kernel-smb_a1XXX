@@ -1205,7 +1205,7 @@ static struct dock_switch_platform_data dock_switch_data = {
 	//.gpio_desktop = 8*('x'-'a')+7,
 	.gpio_desktop_active_low = 0,		/* Is gpio active low ?*/
 	.gpio_car = 0,				/* If donot have an car dock, leave it 0 */
-	.gpio_car = 0,				/* Car dock active low ?*/
+	.gpio_car_active_low = 0,				/* Car dock active low ?*/
 };
 
 static struct platform_device switch_dock_device = {
@@ -1428,7 +1428,7 @@ static void tegra_setup_spi(void) { }
 #endif
 
 #ifdef CONFIG_I2C_TEGRA
-#ifdef CONFIG_TEGRA_ODM_VENTANA
+#if defined(CONFIG_TEGRA_ODM_VENTANA) || defined(CONFIG_SMBA1011)
 static struct tegra_i2c_plat_parms tegra_i2c_platform[] = {
 	[0] = {
 		.adapter_nr = 0,
@@ -1587,7 +1587,9 @@ static noinline void __init tegra_setup_i2c(void)
 		if (mux == NVODM_QUERY_PINMAP_MULTIPLEXED) {
 			pr_err("%s: unable to register %s.%d (multiplexed)\n",
 			       __func__, dev->name, dev->id);
+#ifndef CONFIG_SMBA1011
 			WARN_ON(1);
+#endif
 			continue;
 		}
 #endif

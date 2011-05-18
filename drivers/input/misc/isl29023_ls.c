@@ -39,8 +39,13 @@
 #define ISL29023_MODE_RANGE					(0x03)
 #define ISL29023_MODE_RESOLUTION			(0)
 
+#ifdef CONFIG_SMB1011
+#define ISL29023_R2M_RANGE					(64000*10000/65536)
+#define ISL29023_R2M_RESOLUTION				(1000*10000/65536)
+#else
 #define ISL29023_R2M_RANGE					(64000*1000/65536)
 #define ISL29023_R2M_RESOLUTION				(1000*1000/65536)
+#endif
 
 /*
  * ACCURACY TYPE
@@ -564,6 +569,8 @@ static int isl29023_probe(struct platform_device* pdev)
 {
 	struct input_dev *input_dev;
 	struct isl29023_dev *dev;
+	NvU32 NumI2cConfigs;
+	const NvU32 *pI2cConfigs;
 
 	logd("isl29023_probe...\r\n");
 
@@ -580,7 +587,16 @@ static int isl29023_probe(struct platform_device* pdev)
 	/* Set default accuracy */
 	dev->accuracy = ISL29023_DEFAULT_ACCURACY;
 
-	dev->i2c = NvOdmI2cOpen(NvOdmIoModule_I2c, dev->i2c_instance);
+	NvOdmQueryPinMux(NvOdmIoModule_I2c, &pI2cConfigs, &NumI2cConfigs);
+	if (dev->i2c_instance >= NumI2cConfigs) {
+		return -EINVAL;
+	}
+	if (pI2cConfigs[dev->i2c_instance] == NvOdmI2cPinMap_Multiplexed) {
+		dev->i2c = NvOdmI2cPinMuxOpen(NvOdmIoModule_I2c, dev->i2c_instance, NvOdmI2cPinMap_Config2);
+	} else {
+		dev->i2c = NvOdmI2cOpen(NvOdmIoModule_I2c, dev->i2c_instance);
+	}
+
 	if (!dev->i2c) {
 		return -EINVAL;
 	}

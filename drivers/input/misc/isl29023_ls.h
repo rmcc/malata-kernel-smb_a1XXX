@@ -23,7 +23,11 @@
 /*
  * I2c parameter
  */
+#ifdef CONFIG_SMBA1011
+#define ISL29023_I2C_INSTANCE				1
+#else
 #define ISL29023_I2C_INSTANCE				0
+#endif
 #define ISL29023_I2C_ADDRESS				(0x88)	
 #define ISL29023_I2C_SPEED_KHZ				(100)
 #define ISL29023_I2C_TIMEOUT_MS				(1000)

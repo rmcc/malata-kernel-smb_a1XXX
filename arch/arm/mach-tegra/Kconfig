@@ -205,3 +205,33 @@ config NEWBL
           Enables GTAB's and ZPAD's with the new bootloader to boot successfully.
 
 endif
+
+comment "Malata SMBxxxx platform options"
+
+choice
+        prompt "Select smb platform board"
+        default SMBA1002
+
+config SMBA1011
+        bool "SMBA1011"
+
+config SMBA1002
+        bool "SMBA1002"
+
+config SMBA1004
+        bool "SMBA1004"
+
+config SMBA1006
+        bool "SMBA1006"
+
+config SMBA1007
+        bool "SMBA1007"
+
+config SMBA8901
+        bool "SMBA8902"
+
+config SMBA9701
+        bool "SMBA9701"
+
+endchoice
+

@@ -35,7 +35,11 @@
  * SDO = 0: read/write = 0x39/0x38
  * SDO = 1: read/write = 0x3b/0x3a
  */
+#ifdef CONFIG_SMBA1011
+#define LIS35DE_I2C_INSTANCE					(1)
+#else
 #define LIS35DE_I2C_INSTANCE					(0)
+#endif
 #define LIS35DE_I2C_ADDRESS						(0x38)
 #define LIS35DE_I2C_SPEED_KHZ					(100)
 #define LIS35DE_I2C_TIMEOUT_MS					(1000)
