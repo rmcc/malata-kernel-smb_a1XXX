@@ -278,6 +278,8 @@ static void __init register_spi_ipc_devices(void)
 	}
 }
 
+extern unsigned int system_serial_low;
+extern unsigned int system_serial_high;
 
 static void __init do_system_init(bool standard_i2c, bool standard_spi)
 {
@@ -290,6 +292,8 @@ static void __init do_system_init(bool standard_i2c, bool standard_spi)
 
 	NvRmQueryChipUniqueId(s_hRmGlobal, sizeof(chip_id), (void*)chip_id);
 	snprintf(serial, sizeof(serial), "%08x%08x", chip_id[1], chip_id[0]);
+        system_serial_low = chip_id[1];
+        system_serial_high = chip_id[0];
 #ifdef CONFIG_USB_G_ANDROID
 	tegra_android_platform.serial_number = kstrdup(serial, GFP_KERNEL);
 #endif
