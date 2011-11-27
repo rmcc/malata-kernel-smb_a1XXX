@@ -411,7 +411,9 @@ static void tegra_touch_fingers_dealwith(struct tegra_touch_driver_data *touch, 
 	{
 		input_report_abs(touch->input_dev, ABS_MT_TOUCH_MAJOR, 0);
 		input_report_abs(touch->input_dev, ABS_MT_WIDTH_MAJOR, 0);
+		input_report_key(touch->input_dev, BTN_TOUCH, 0);
 		input_mt_sync(touch->input_dev);
+		input_sync(touch->input_dev);
 	}
 
 	if(1 == fingers)
@@ -420,7 +422,9 @@ static void tegra_touch_fingers_dealwith(struct tegra_touch_driver_data *touch, 
 		input_report_abs(touch->input_dev, ABS_MT_POSITION_Y, coord.additionalInfo.multi_XYCoords[0][1]);
 		input_report_abs(touch->input_dev, ABS_MT_TOUCH_MAJOR, 10);
 		input_report_abs(touch->input_dev, ABS_MT_WIDTH_MAJOR, 20);
+		input_report_key(touch->input_dev, BTN_TOUCH, 1);
 		input_mt_sync(touch->input_dev);
+		input_sync(touch->input_dev);
 	}
 
 	if(2 == fingers)
